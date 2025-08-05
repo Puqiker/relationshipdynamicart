@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RDA认知钢片项目 - 增强版</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --light-gray: #e9ecef;
+            --medium-gray: #adb5bd;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #ff9e00;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f4f8 0%, #dfe7f1 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        header {
+            background: linear-gradient(120deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: -80px;
+            right: -30px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo-icon {
+            background: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .logo-icon i {
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .tagline {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            margin-top: 10px;
+        }
+        
+        .section {
+            padding: 30px;
+            display: none;
+        }
+        
+        .active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+        
+        h2 {
+            color: var(--secondary);
+            margin: 25px 0 15px;
+            font-weight: 600;
+            font-size: 22px;
+        }
+        
+        h3 {
+            color: var(--dark);
+            margin: 20px 0 10px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .intro {
+            background: linear-gradient(120deg, #eef7ff 0%, #e6f0ff 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.1);
+        }
+        
+        .intro p {
+            margin-bottom: 15px;
+        }
+        
+        .intro ul {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        .intro li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .intro li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--light-gray);
+            transition: var(--transition);
+        }
+        
+        .question:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .options {
+            margin-top: 20px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: var(--light);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .option:hover {
+            background: #e6f0ff;
+            transform: translateX(5px);
+            border-color: var(--accent);
+        }
+        
+        .option.selected {
+            background: #d1e9ff;
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(67, 97, 238, 0.15);
+        }
+        
+        .option-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-weight: bold;
+            color: var(--medium-gray);
+        }
+        
+        .option.selected .option-icon {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 32px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            margin: 10px 5px;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.35);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            box-shadow: 0 4px 12px rgba(76, 201, 240, 0.25);
+        }
+        
+        .btn-success:hover {
+            background: #3fbde0;
+        }
+        
+        .progress-container {
+            margin: 20px 0 30px;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background: var(--light-gray);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--medium-gray);
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin: 25px 0;
+        }
+        
+        .steel-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: var(--card-shadow);
+            border-top: 4px solid var(--accent);
+        }
+        
+        .steel-type {
+            display: inline-block;
+            padding: 6px 15px;
+            background: linear-gradient(120deg, #f0f7ff, #e4f0ff);
+            border-radius: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+            border: 1px solid #d0e3ff;
+        }
+        
+        .composite-type {
+            background: linear-gradient(120deg, #ff9a9e, #fad0c4);
+            color: white;
+        }
+        
+        .steel-description {
+            background: #f8fbff;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .plan-day {
+            background: linear-gradient(120deg, #f9fcff, #f0f7ff);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+        
+        .task {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #e0e9ff;
+        }
+        
+        .task:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border: none;
+        }
+        
+        .task-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+        
+        .course-card {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 30px 0;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .course-image {
+            width: 35%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            overflow: hidden;
+        }
+        
+        .course-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        
+        .course-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--danger);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .course-content {
+            width: 65%;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .course-title {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        .course-features {
+            margin: 20px 0;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .feature i {
+            color: var(--success);
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        .price-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+        
+        .price {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: var(--medium-gray);
+            margin-left: 10px;
+            font-size: 18px;
+        }
+        
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        
+        .stars {
+            color: #ffc107;
+            margin-right: 10px;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: var(--medium-gray);
+            font-size: 14px;
+            border-top: 1px solid var(--light-gray);
+            margin-top: 20px;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .section-title h2 {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .section-title p {
+            color: var(--medium-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .image-container {
+            margin: 30px auto;
+            max-width: 800px;
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        
+        .survey-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+            background: white;
+        }
+        
+        .image-caption {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .section {
+                padding: 20px;
+            }
+            
+            .course-card {
+                flex-direction: column;
+            }
+            
+            .course-image, .course-content {
+                width: 100%;
+            }
+            
+            .course-image {
+                padding: 30px;
+            }
+            
+            .image-container {
+                margin: 20px 10px;
+                padding: 10px;
+            }
+            
+            .survey-image {
+                max-height: 250px;
+            }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-left: 4px solid var(--danger);
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.4s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .steel-analysis {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9ff;
+            border-radius: 12px;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .steel-analysis h4 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .plan-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .plan-table th {
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .plan-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e9ff;
+        }
+        
+        .plan-table tr:nth-child(even) {
+            background: #f8fbff;
+        }
+        
+        .plan-table tr:hover {
+            background: #e6f0ff;
+        }
+        
+        .free-plan {
+            background: #e6f7ff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px dashed var(--accent);
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            background: #f0f7ff;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .contact-item i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .team-images {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .team-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .team-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .team-label {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        
+        .course-highlight {
+            display: inline-block;
+            padding: 3px 10px;
+            background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+            color: #fff;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .course-value {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .course-value i {
+            color: var(--success);
+            margin-right: 10px;
+        }
+        
+        .course-cta {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(120deg, #f0f7ff, #e6f0ff);
+            border-radius: 15px;
+        }
+        
+        #fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3000;
+            display: none;
+        }
+        
+        .particle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: hsl(var(--hue), 100%, 60%);
+            box-shadow: 0 0 10px hsl(var(--hue), 100%, 60%), 
+                        0 0 20px hsl(var(--hue), 100%, 60%);
+            transform: translate(50vw, 50vh) scale(0);
+            animation: explode var(--duration) ease-out forwards;
+        }
+        
+        @keyframes explode {
+            0% {
+                transform: translate(50vw, 50vh) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: 
+                    translate(
+                        calc(50vw + var(--tx)), 
+                        calc(50vh + var(--ty))
+                    ) 
+                    scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .gauge-shadow {
+            filter: drop-shadow(0 5px 15px rgba(67, 97, 238, 0.4));
+        }
+        
+        .health-note {
+            background: linear-gradient(135deg, #e6f7ff, #d1f2eb);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .composite-details {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9f3ff;
+            border-radius: 10px;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .composite-details h4 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .composite-bar {
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .composite-bar-fill {
+            height: 100%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="logo-text">RDA认知钢片项目</div>
+            </div>
+            <p class="tagline">发现关系动态的智慧，磨炼内在认知钢片，成就更自洽的人生</p>
+        </header>
+        
+        <!-- 欢迎页 -->
+        <div id="welcome-section" class="section active">
+            <div class="section-title">
+                <h2>认知钢片测评</h2>
+                <p>探索你的关系模式，发现潜在认知障碍，开启自我成长之旅</p>
+            </div>
+            
+            <div class="intro">
+                <p>你是否曾在关系中反复陷入相似困境？是否换了环境，却仍被旧模式所困？</p>
+                <p>心理学研究发现：<strong>90%的关系痛苦源于早期形成的"认知钢片"</strong>——那些深藏心底的错误信念，如蚌中碎铁般持续磨损自我。</p>
+                <p>通过本测评，你将获得：</p>
+                <ul>
+                    <li><strong>专属认知钢片分析报告</strong> - 精确定位核心信念盲区</li>
+                    <li><strong>个性化3日修正训练计划</strong> - 启动"磨钢成玉"之旅</li>
+                    <li><strong>专业成长建议</strong> - 针对性的课程与学习路径</li>
+                </ul>
+            </div>
+            
+            <div class="image-container">
+                <img src="assets/bangke.png"
+                    alt="认知钢片概念图"
+                    class="survey-image">
+                <p class="image-caption">磨钢片为珠玉，破蚌壳见澄明</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" id="start-btn" onclick="showSection('question-section')">
+                    <i class="fas fa-play-circle"></i> 开始认知探索
+                </button>
+                <p style="margin-top: 20px; color: var(--medium-gray); font-size: 14px;">
+                    <i class="fas fa-lock"></i> 你的数据将受到严格保护，仅用于测评分析
+                </p>
+            </div>
+        </div>
+
+        <!-- 问卷页 -->
+        <div id="question-section" class="section">
+            <div class="section-title">
+                <h2>认知钢片测评</h2>
+                <p>请根据你的第一直觉回答以下问题</p>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progress" style="width: 0%"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="progress-percent">0%</span>
+                    <span>12道问题</span>
+                </div>
+            </div>
+            
+            <div id="questions-container"></div>
+            
+            <div class="nav">
+                <button class="btn btn-outline" id="prev-btn" onclick="handlePrevButton()" disabled>
+                    <i class="fas fa-home"></i> 返回首页
+                </button>
+                <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>
+                    下一题 <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 报告页 -->
+        <div id="report-section" class="section">
+            <div class="section-title">
+                <h2>你的认知钢片分析报告</h2>
+                <p>基于你的测评结果生成的个性化分析</p>
+            </div>
+            
+            <div class="steel-card">
+                <div class="steel-type" id="main-steel-type">分析中...</div>
+                <h2>核心诊断</h2>
+                <div id="main-steel-chart" class="chart-container"></div>
+                <div class="steel-description" id="steel-description">
+                    <p>正在分析你的答案...</p>
+                </div>
+                
+                <div id="composite-details"></div>
+                
+                <div class="steel-analysis" id="steel-analysis">
+                    <!-- 详细分析内容将通过JS动态生成 -->
+                </div>
+            </div>
+            
+            <div class="steel-card">
+                <h2>认知钢片分布</h2>
+                <div id="steel-chart" class="chart-container"></div>
+            </div>
+            
+            <div class="steel-card">
+                <h2>你的专属3日修正计划</h2>
+                <div id="plan-container"></div>
+            </div>
+            
+            <div class="nav">
+                <button class="btn btn-outline" onclick="showSection('welcome-section')">
+                    <i class="fas fa-home"></i> 返回首页
+                </button>
+                <button class="btn" onclick="showSection('course-section')">
+                    查看推荐课程 <i class="fas fa-graduation-cap"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 课程页 -->
+        <div id="course-section" class="section">
+            <div class="section-title">
+                <h2>精选修正课程</h2>
+                <p>基于你的认知钢片类型量身推荐</p>
+            </div>
+            
+            <div id="courses-container"></div>
+            
+            <div class="nav">
+                <button class="btn btn-outline" onclick="showSection('report-section')">
+                    <i class="fas fa-arrow-left"></i> 返回报告
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>RDA认知钢片项目 &copy; 2025 版权所有 | 基于关系动态理论的认知升级系统</p>
+            <p>本测评结果仅供参考，不作为专业心理诊断依据</p>
+        </div>
+    </div>
+    
+    <!-- 烟花容器 -->
+    <div id="fireworks"></div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-exclamation-circle" style="color: var(--danger); margin-right: 10px;"></i>
+        <span id="notification-text">你已经完成过此问卷，请勿重复提交</span>
+    </div>
+
+    <script>
+        // 问卷数据
+        const questions = [
+            {
+                id: 1,
+                text: "睡莲每天以2倍速度生长，第48天铺满整个湖面。铺满一半湖面需要多少天？",
+                options: [
+                    { text: "24天", value: "A", type: "思维惰性" },
+                    { text: "47天", value: "B", type: null },
+                    { text: "12天", value: "C", type: null }
+                ]
+            },
+            {
+                id: 2,
+                text: "当你的朋友或者同事和你说'哎呀，最近太忙没联系了'，你听后认为造成没联系的原因是？",
+                options: [
+                    { text: "TA可能前段时间对我有意见", value: "A", type: "敌意投射" },
+                    { text: "我两关系一般，我不值得被关心", value: "B", type: "低价值感" },
+                    { text: "TA可能遇到工作或生活上的困难", value: "C", type: null }
+                ]
+            },
+            {
+                id: 3,
+                text: "项目提案被否决，你更倾向认为：",
+                options: [
+                    { text: "感到有些迷茫，为什么我总是做不好事情", value: "A", type: "低价值感" },
+                    { text: "反思整个项目过程，是不是这次选题可能不符合需求", value: "B", type: null },
+                    { text: "为什么我的项目偏偏被否决，是不是领导故意打压我", value: "C", type: "敌意投射" }
+                ]
+            },
+            {
+                id: 4,
+                text: "伴侣突然变得冷淡，你首先想到：",
+                options: [
+                    { text: "可能TA工作方面的压力大", value: "A", type: null },
+                    { text: "TA是不是不爱我了，人过了热恋期就没那么喜欢了", value: "B", type: "低价值感" },
+                    { text: "TA在试探我的底线，测试我的框架", value: "C", type: "敌意投射" }
+                ]
+            },
+            {
+                id: 5,
+                text: "若在情感或工作上的'积极争取'态度导致你总被拒绝，你会：",
+                options: [
+                    { text: "觉得是自己还不够努力，于是更努力争取", value: "A", type: "模式固着" },
+                    { text: "感觉自己这么也努力也被拒绝，选择躺平或彻底放弃", value: "B", type: "模式固着" },
+                    { text: "改为观察他人策略", value: "C", type: null }
+                ]
+            },
+            {
+                id: 6,
+                text: "在工作上被领导批评工作失误，你更可能认为：",
+                options: [
+                    { text: "是我的专业能力太差，我还得在提升", value: "A", type: "低价值感" },
+                    { text: "是这次没发挥好，下次会更注意细节", value: "B", type: null },
+                    { text: "一点失误也要说，领导有针对我的意思", value: "C", type: "敌意投射" }
+                ]
+            },
+            {
+                id: 7,
+                text: "在职场上看到他人升职加薪，你首先想到：",
+                options: [
+                    { text: "这个职位被他当上了，看来最近几年我都没什么晋升机会", value: "A", type: "低价值感" },
+                    { text: "TA比我更努力", value: "B", type: null },
+                    { text: "公司晋升是不是有黑幕", value: "C", type: "敌意投射" }
+                ]
+            },
+            {
+                id: 8,
+                text: "多次约会失败后，你倾向于：",
+                options: [
+                    { text: "连续见了这么多女生都没有后续，感觉没人爱我", value: "A", type: "低价值感" },
+                    { text: "缘分还未到", value: "B", type: null },
+                    { text: "异性都肤浅，没后续是TA们的问题", value: "C", type: "敌意投射" }
+                ]
+            },
+            {
+                id: 9,
+                text: "努力健身但效果不佳，你会认为：",
+                options: [
+                    { text: "是不是天生体质太差", value: "A", type: "低价值感" },
+                    { text: "基因注定我这样", value: "B", type: "思维惰性" },
+                    { text: "我的训练方法需要调整", value: "C", type: null }
+                ]
+            },
+            {
+                id: 10,
+                text: "朋友或同事举办聚会未邀请你，你会认为：",
+                options: [
+                    { text: "是不是TA们排挤我，不喜欢我", value: "A", type: "低价值感" },
+                    { text: "可能这次漏通知了", value: "B", type: null },
+                    { text: "故意羞辱我，让我难堪", value: "C", type: "敌意投射" }
+                ]
+            },
+            {
+                id: 11,
+                text: "领导突然关心你的工作，你首先想到：",
+                options: [
+                    { text: "这是一次正常的工作沟通", value: "A", type: null },
+                    { text: "是不是要辞退我了", value: "B", type: "低价值感" },
+                    { text: "在试探我最近表现", value: "C", type: "敌意投射" }
+                ]
+            },
+            {
+                id: 12,
+                text: "在新工作中遇到类似旧问题（如同事冲突），你更可能：",
+                options: [
+                    { text: "用老方法应对，哪怕结果依旧也无所谓", value: "A", type: "模式固着" },
+                    { text: "尝试请教他人寻找新的方案", value: "B", type: null },
+                    { text: "觉得太尴尬选择离职回避问题", value: "C", type: "模式固着" }
+                ]
+            }
+        ];
+
+        // 用户答案存储
+        let userAnswers = {};
+        let currentQuestion = 0;
+        let hasSubmitted = false;
+
+        // 钢片类型数据
+        const steelTypes = {
+            "思维惰性": { 
+                color: "#FF6B6B", 
+                description: "倾向于依赖直觉而非深度思考，容易陷入表面理解的陷阱",
+                detailed: "思维惰性是一种常见的认知钢片，表现为个体在面对问题时倾向于使用直觉和经验快速做出判断，而忽视深入分析和逻辑推理..."
+            },
+            "低价值感": { 
+                color: "#4CC9F0", 
+                description: "常将失败归因于自身本质缺陷，忽视环境变量影响",
+                detailed: "低价值感认知钢片表现为个体对自身价值的系统性低估，常将失败归因于个人内在缺陷而非外部因素..."
+            },
+            "敌意投射": { 
+                color: "#7209B7", 
+                description: "倾向于将他人的行为解读为恶意针对，引发防御性反应",
+                detailed: "敌意投射认知钢片表现为个体倾向于将他人的中性或模糊行为解读为恶意攻击，并据此做出防御性甚至攻击性反应..."
+            },
+            "模式固着": { 
+                color: "#F72585", 
+                description: "反复使用无效的应对策略，缺乏行为弹性",
+                detailed: "模式固着认知钢片表现为个体在面对挑战时，反复使用已被证明无效的应对策略，缺乏根据情境调整行为的能力..."
+            },
+            "健康型": { 
+                color: "#4CAF50", 
+                description: "认知灵活，适应性强",
+                detailed: "虽然未检测出明显的潜在认知钢片问题，这可能是你当下的理性思维（逻辑脑）占据上风导致的。这表明你具有良好的认知灵活性，能够理性分析问题，在不同情境中调整思维和行为模式。"
+            },
+            "复合型": { 
+                color: "#FF9E00", 
+                description: "存在多种认知钢片组合",
+                detailed: "你存在多种认知钢片组合，表明你在不同情境下可能表现出不同的认知模式。这种复合型认知钢片需要综合性的干预策略..."
+            }
+        };
+
+        // 训练计划
+        const trainingPlans = {
+            "思维惰性": [
+                { day: 1, title: "破除直觉依赖", tasks: ["记录3次直觉判断失误案例", "应用元认知策略对重要决策进行5分钟深度思考"] },
+                { day: 2, title: "培养系统思维", tasks: ["分析1个复杂问题的多重因果关系", "完成'思维导图'练习"] },
+                { day: 3, title: "建立反思习惯", tasks: ["每日睡前记录当日重要决策", "写'认知升级日记'"] }
+            ],
+            "低价值感": [
+                { day: 1, title: "破除价值绑定", tasks: ["记录3次'无成果仍被爱'的证据", "应用自我肯定技术"] },
+                { day: 2, title: "失败再定义", tasks: ["写'失败馈赠清单'", "尝试1件曾认定'我不行'的事"] },
+                { day: 3, title: "建立价值锚点", tasks: ["创作个人价值宣言", "应用自我关怀技术"] }
+            ],
+            "敌意投射": [
+                { day: 1, title: "识别投射模式", tasks: ["记录3次将中性行为解读为敌意的案例", "尝试找出其他合理解释"] },
+                { day: 2, title: "培养同理视角", tasks: ["从他人角度重写冲突事件", "练习'换位思考'日记"] },
+                { day: 3, title: "建立信任基础", tasks: ["主动表达1次信任他人的行为", "记录3次他人值得信任的证据"] }
+            ],
+            "模式固着": [
+                { day: 1, title: "识别固定模式", tasks: ["记录3次重复使用无效方法的情况", "分析失败原因"] },
+                { day: 2, title: "探索新策略", tasks: ["尝试3种新方法解决旧问题", "请教他人寻找新方案"] },
+                { day: 3, title: "建立弹性思维", tasks: ["制定应变计划", "练习情境适应性思考"] }
+            ],
+            "健康型": [
+                { day: 1, title: "双脑协同训练", tasks: ["完成逻辑脑-情感脑平衡测试", "记录理性与感性决策对比案例"] },
+                { day: 2, title: "认知弹性强化", tasks: ["尝试用3种不同策略解决同一问题", "完成'视角转换'练习"] },
+                { day: 3, title: "关系动态优化", tasks: ["设计情感脑主导的关系互动实验", "分析成功关系认知模式共性"] }
+            ],
+            "复合型": [
+                { day: 1, title: "综合识别", tasks: ["分析各类认知钢片的表现场景", "记录不同情境下的思维模式"] },
+                { day: 2, title: "针对性训练", tasks: ["针对不同钢片类型进行专项练习", "设计综合解决方案"] },
+                { day: 3, title: "整合优化", tasks: ["制定复合型认知优化策略", "建立长期认知监测机制"] }
+            ]
+        };
+
+        // 推荐课程
+        const courses = [
+            {
+                id: 1,
+                title: "认知突破3日营",
+                description: "针对核心认知钢片的快速修正方案，帮助你在短期内突破思维限制。",
+                price: 777,
+                features: ["专属导师1对1咨询", "认知训练工具包", "RDA内部互助社群"],
+                image: "assets/mind.jpg",
+                rating: 4.7,
+                students: 42,
+                duration: "3天"
+            },
+            {
+                id: 2,
+                title: "关系重构14日训练营",
+                description: "深度修正关系中的认知钢片，重建健康的关系模式。",
+                price: 1577,
+                originalPrice: 2599,
+                features: ["14天系统训练", "专属导师指导", "个性化方案定制"],
+                image: "assets/relationship.jpg",
+                rating: 4.9,
+                students: 38,
+                duration: "2周"
+            },
+            {
+                id: 3,
+                title: "认知升级21天计划",
+                description: "全面重建认知系统的高阶课程，建立灵活、健康的认知模式。",
+                price: 2377,
+                originalPrice: 3999,
+                features: ["21天全方位训练", "专属导师全程指导", "认知系统重建"],
+                image: "assets/upgrade.jpg",
+                rating: 5.0,
+                students: 27,
+                duration: "3周"
+            }
+        ];
+
+        // 初始化问卷
+        function initQuestionnaire() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const questionEl = document.createElement('div');
+                questionEl.className = 'question';
+                questionEl.style.display = index === 0 ? 'block' : 'none';
+                questionEl.dataset.id = q.id;
+                
+                let optionsHTML = '';
+                q.options.forEach((opt, optIndex) => {
+                    const isSelected = userAnswers[q.id] && userAnswers[q.id].value === opt.value;
+                    optionsHTML += `
+                        <div class="option ${isSelected ? 'selected' : ''}" 
+                             data-value="${opt.value}" 
+                             data-type="${opt.type}">
+                            <div class="option-icon">${String.fromCharCode(65 + optIndex)}</div>
+                            <div class="option-text">${opt.text}</div>
+                        </div>
+                    `;
+                });
+                
+                questionEl.innerHTML = `
+                    <h3>${q.id}. ${q.text}</h3>
+                    <div class="options">
+                        ${optionsHTML}
+                    </div>
+                `;
+                
+                container.appendChild(questionEl);
+            });
+            
+            updateProgress();
+            updateButtonStates();
+        }
+
+        // 显示指定部分
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            
+            if (sectionId === 'report-section') {
+                generateReport();
+                document.getElementById('start-btn').innerHTML = '<i class="fas fa-file-alt"></i> 查看我的测试报告';
+                document.getElementById('start-btn').onclick = function() {
+                    showSection('report-section');
+                };
+            } else if (sectionId === 'course-section') {
+                showCourses();
+            }
+            
+            window.scrollTo(0, 0);
+        }
+
+        // 处理上一题按钮逻辑
+        function handlePrevButton() {
+            if (currentQuestion === 0) {
+                showSection('welcome-section');
+            } else {
+                prevQuestion();
+            }
+        }
+
+        // 更新进度条
+        function updateProgress() {
+            const progress = (currentQuestion / questions.length) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+            document.getElementById('progress-percent').textContent = `${Math.round(progress)}%`;
+        }
+
+        // 更新按钮状态
+        function updateButtonStates() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.disabled = false;
+            prevBtn.innerHTML = currentQuestion === 0 ? 
+                '<i class="fas fa-home"></i> 返回首页' : 
+                '<i class="fas fa-arrow-left"></i> 上一题';
+            
+            const currentQuestionId = questions[currentQuestion].id;
+            nextBtn.disabled = !userAnswers[currentQuestionId];
+            nextBtn.innerHTML = currentQuestion < questions.length - 1 ? 
+                '下一题 <i class="fas fa-arrow-right"></i>' : 
+                '完成测评 <i class="fas fa-check"></i>';
+        }
+
+        // 选择答案
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.option')) {
+                const option = e.target.closest('.option');
+                const questionId = parseInt(option.closest('.question').dataset.id);
+                
+                const options = option.parentElement.querySelectorAll('.option');
+                options.forEach(opt => opt.classList.remove('selected'));
+                
+                option.classList.add('selected');
+                
+                userAnswers[questionId] = {
+                    value: option.dataset.value,
+                    type: option.dataset.type
+                };
+                
+                updateButtonStates();
+            }
+        });
+
+        // 上一题
+        function prevQuestion() {
+            const currentQuestionEl = document.querySelector(`.question[data-id="${questions[currentQuestion].id}"]`);
+            currentQuestionEl.style.display = 'none';
+            
+            currentQuestion--;
+            
+            const prevQuestionEl = document.querySelector(`.question[data-id="${questions[currentQuestion].id}"]`);
+            prevQuestionEl.style.display = 'block';
+            
+            updateProgress();
+            updateButtonStates();
+        }
+
+        // 下一题
+        function nextQuestion() {
+            const currentQuestionEl = document.querySelector(`.question[data-id="${questions[currentQuestion].id}"]`);
+            currentQuestionEl.style.display = 'none';
+            
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                const nextQuestionEl = document.querySelector(`.question[data-id="${questions[currentQuestion].id}"]`);
+                nextQuestionEl.style.display = 'block';
+                updateButtonStates();
+            } else {
+                hasSubmitted = true;
+                showSection('report-section');
+            }
+            
+            updateProgress();
+        }
+        
+        // 烟花效果函数
+        function showFireworks() {
+            const container = document.getElementById('fireworks');
+            container.style.display = 'block';
+            
+            for(let i=0; i<150; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const tx = (Math.random() - 0.5) * 1000;
+                const ty = (Math.random() - 0.5) * 1000;
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                particle.style.setProperty('--hue', Math.floor(Math.random() * 360));
+                particle.style.setProperty('--duration', `${Math.random() * 1 + 2}s`);
+                
+                container.appendChild(particle);
+            }
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+                container.style.display = 'none';
+            }, 3000);
+        }
+
+        // 生成报告
+        function generateReport() {
+            // 初始化分数
+            const scores = {};
+            Object.keys(steelTypes).forEach(type => {
+                if (type !== "健康型" && type !== "复合型") scores[type] = 0;
+            });
+            
+            // 计算分数
+            Object.values(userAnswers).forEach(answer => {
+                if (answer.type && scores.hasOwnProperty(answer.type)) {
+                    scores[answer.type] = (scores[answer.type] || 0) + 1;
+                }
+            });
+            
+            // 计算总认知钢片数量和主导类型
+            let totalSteelCount = 0;
+            let maxScore = 0;
+            const mainTypes = [];
+            
+            Object.entries(scores).forEach(([type, score]) => {
+                totalSteelCount += score;
+                if (score > maxScore) {
+                    maxScore = score;
+                    mainTypes.length = 0;
+                    mainTypes.push(type);
+                } else if (score === maxScore && score > 0) {
+                    mainTypes.push(type);
+                }
+            });
+            
+            // 判断是否为健康型
+            const isHealthy = totalSteelCount === 0;
+            
+            // 确定主导类型
+            let mainSteelType = "健康型";
+            let isComposite = false;
+            
+            if (!isHealthy) {
+                if (mainTypes.length === 1) {
+                    mainSteelType = mainTypes[0];
+                } else if (mainTypes.length > 1) {
+                    mainSteelType = "复合型";
+                    isComposite = true;
+                }
+            }
+            
+            // 计算钢片强度（占总题数的百分比）
+            const strength = isHealthy ? 0 : parseFloat((totalSteelCount / questions.length * 100).toFixed(2));
+            
+            // 显示烟花效果
+            if(isHealthy) {
+                showFireworks();
+            }
+            
+            // 更新报告显示
+            const typeElement = document.getElementById('main-steel-type');
+            typeElement.textContent = mainSteelType;
+            
+            if (isComposite) {
+                typeElement.classList.add('composite-type');
+            } else {
+                typeElement.classList.remove('composite-type');
+            }
+            
+            // 更新描述
+            let description = `
+                <p><strong>钢片强度：${strength}%</strong></p>
+                <p>${steelTypes[mainSteelType].description}</p>
+            `;
+            
+            if (isHealthy) {
+                description += `
+                    <div class="health-note">
+                        <p><strong>特别提示：</strong>虽然未检测出明显的潜在认知钢片问题，这可能是你当下的理性思维（逻辑脑）占据上风导致的。请继续关注双脑平衡发展，保持认知灵活性。</p>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('steel-description').innerHTML = description;
+            
+            // 详细分析
+            document.getElementById('steel-analysis').innerHTML = `
+                <h4>详细分析与典型表现</h4>
+                <p>${steelTypes[mainSteelType].detailed}</p>
+            `;
+            
+            // 渲染复合型详情
+            const compositeContainer = document.getElementById('composite-details');
+            compositeContainer.innerHTML = '';
+            
+            if (isComposite) {
+                let compositeHTML = `
+                    <div class="composite-details">
+                        <h4>复合型认知钢片详情</h4>
+                        <p>你的认知钢片由以下类型组成：</p>
+                `;
+                
+                mainTypes.forEach(type => {
+                    const percentage = parseFloat((scores[type] / totalSteelCount * 100).toFixed(1));
+                    compositeHTML += `
+                        <div style="margin: 15px 0;">
+                            <p><strong>${type}</strong>：${scores[type]}次 (${percentage}%)</p>
+                            <div class="composite-bar">
+                                <div class="composite-bar-fill" style="width: ${percentage}%; background: ${steelTypes[type].color}"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                compositeHTML += `
+                        <p>总认知钢片出现次数：${totalSteelCount}次</p>
+                    </div>
+                `;
+                
+                compositeContainer.innerHTML = compositeHTML;
+            }
+            
+            // 渲染图表
+            renderSteelChart(scores, totalSteelCount);
+            renderMainSteelChart(mainSteelType, strength);
+            
+            // 渲染训练计划
+            renderTrainingPlan(mainSteelType);
+        }
+
+        // 渲染钢片分布图
+        function renderSteelChart(scores, totalSteelCount) {
+            const chart = echarts.init(document.getElementById('steel-chart'));
+            
+            const data = Object.entries(steelTypes)
+                .filter(([type]) => type !== "健康型" && type !== "复合型")
+                .map(([type, info]) => ({
+                    name: type,
+                    value: scores[type] || 0,
+                    percent: totalSteelCount > 0 ? parseFloat((scores[type] / totalSteelCount * 100).toFixed(1)) : 0,
+                    itemStyle: { color: info.color }
+                }));
+
+            const option = {
+                backgroundColor: 'transparent',
+                tooltip: { 
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        const data = params[0].data;
+                        return `${data.name}<br/>出现次数: ${data.value}<br/>占比: ${data.percent}%`;
+                    }
+                },
+                grid: { top: '15%', bottom: '15%' },
+                xAxis: {
+                    type: 'category',
+                    data: data.map(d => d.name),
+                    axisLine: { 
+                        lineStyle: { 
+                            color: '#4361ee',
+                            width: 2
+                        }
+                    },
+                    axisLabel: { 
+                        interval: 0,
+                        fontWeight: 'bold',
+                        fontSize: 14,
+                        color: '#555'
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    max: Math.max(...data.map(d => d.value), 5) + 1,
+                    splitLine: { 
+                        show: true,
+                        lineStyle: {
+                            color: '#eee'
+                        }
+                    }
+                },
+                series: [{
+                    name: '出现次数',
+                    type: 'bar',
+                    barWidth: '40%',
+                    data: data,
+                    itemStyle: {
+                        borderRadius: [10, 10, 0, 0],
+                        borderWidth: 2,
+                        borderColor: '#fff',
+                        shadowBlur: 20,
+                        shadowColor: 'rgba(0,0,0,0.3)'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowColor: 'rgba(0,0,0,0.5)',
+                            shadowBlur: 30
+                        }
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        fontWeight: 'bold',
+                        fontSize: 14,
+                        formatter: '{c}'
+                    }
+                }]
+            };
+            
+            chart.setOption(option);
+        }
+
+        // 渲染主导钢片图表
+        function renderMainSteelChart(type, strength) {
+            const chart = echarts.init(document.getElementById('main-steel-chart'));
+            
+            const option = {
+                tooltip: {
+                    trigger: 'item'
+                },
+                series: [{
+                    name: '钢片强度',
+                    type: 'gauge',
+                    radius: '90%',
+                    min: 0,
+                    max: 100,
+                    progress: {
+                        show: true,
+                        width: 20,
+                        itemStyle: {
+                            color: {
+                                type: 'linear',
+                                x: 0,
+                                y: 0,
+                                x2: 1,
+                                y2: 0,
+                                colorStops: [{
+                                    offset: 0, color: steelTypes[type].color
+                                }, {
+                                    offset: 1, color: steelTypes[type].color.replace(')', ', 0.8)')
+                                }]
+                            },
+                            shadowBlur: 15,
+                            shadowColor: steelTypes[type].color
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            width: 20
+                        }
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    splitLine: {
+                        length: 15,
+                        lineStyle: {
+                            width: 3,
+                            color: '#999'
+                        }
+                    },
+                    axisLabel: {
+                        distance: -25,
+                        color: '#999',
+                        fontSize: 12
+                    },
+                    anchor: {
+                        show: true,
+                        showAbove: true,
+                        size: 20,
+                        itemStyle: {
+                            borderWidth: 8
+                        }
+                    },
+                    detail: {
+                        valueAnimation: true,
+                        fontSize: 30,
+                        offsetCenter: [0, '80%'],
+                        formatter: '{value}%',
+                        color: steelTypes[type].color,
+                        fontWeight: 'bold'
+                    },
+                    data: [{
+                        value: strength,
+                        name: type
+                    }]
+                }]
+            };
+            
+            chart.setOption(option);
+            
+            document.getElementById('main-steel-chart').classList.add('gauge-shadow');
+        }
+
+        // 渲染训练计划
+        function renderTrainingPlan(mainSteelType) {
+            const planContainer = document.getElementById('plan-container');
+            const plan = trainingPlans[mainSteelType];
+            
+            let tableHTML = `
+                <div class="intro">
+                    <p>根据你的<strong>${mainSteelType}</strong>认知模式，我们为你定制了专属的3日强化训练计划：</p>
+                </div>
+                <table class="plan-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">天数</th>
+                            <th style="width: 25%;">主题</th>
+                            <th>训练内容</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            plan.forEach(day => {
+                tableHTML += `
+                    <tr>
+                        <td>第${day.day}天</td>
+                        <td>${day.title}</td>
+                        <td>
+                            <ul style="list-style-type: none; padding-left: 0;">
+                `;
+                
+                day.tasks.forEach(task => {
+                    tableHTML += `<li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #4cc9f0; margin-right: 8px;"></i> ${task}</li>`;
+                });
+                
+                tableHTML += `
+                            </ul>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            planContainer.innerHTML = tableHTML + `
+                <div class="free-plan">
+                    <h3>获取完整计划</h3>
+                    <p>截图保存此页面，凭借你的测试报告联系我们，免费获取完整专属3日修正计划清单</p>
+                    <p>关系动态艺术团队将为你提供个性化指导</p>
+                </div>
+            `;
+        }
+
+        // 显示课程
+        function showCourses() {
+            const container = document.getElementById('courses-container');
+            
+            container.innerHTML = courses.map(course => `
+                <div class="course-card">
+                    <div class="course-image">
+                        <img src="${course.image}" alt="${course.title}">
+                    </div>
+                    <div class="course-content">
+                        <div class="course-badge">${course.duration}</div>
+                        <h2 class="course-title">${course.title}</h2>
+                        <div class="course-highlight">${course.id === 1 ? '快速突破' : course.id === 2 ? '深度重构' : '全面升级'}</div>
+                        <p>${course.description}</p>
+                        
+                        <div class="course-features">
+                            ${course.features.map(feature => `
+                                <div class="feature">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>${feature}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="course-value">
+                            <i class="fas fa-users"></i>
+                            <span>已参与: ${course.students}人（限50人小班）</span>
+                        </div>
+                        
+                        <div class="rating">
+                            <div class="stars">
+                                ${renderStars(course.rating)}
+                            </div>
+                            <span>${course.rating} 评分</span>
+                        </div>
+                        
+                        <div class="price-container">
+                            <div>
+                                <span class="price">¥${course.price}</span>
+                                ${course.originalPrice ? `<span class="original-price">¥${course.originalPrice}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('') + `
+                <div class="course-cta">
+                    <h3>立即联系我们，抢先学习上述课程</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fab fa-weixin" style="color: #07C160;"></i>
+                            微信: rda9868
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-line" style="color: #00C300;"></i>
+                            LINE: tcmcan
+                        </div>
+                    </div>
+                    
+                    <div class="team-images">
+                        <div>
+                            <div class="team-image">
+                                <img src="assets/can.png" alt="导师头像">
+                            </div>
+                            <div class="team-label">首席导师</div>
+                        </div>
+                        <div>
+                            <div class="team-image">
+                                <img src="assets/rda.png" alt="团队标志">
+                            </div>
+                            <div class="team-label">关系动态艺术团队</div>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 20px; font-weight: 500;">添加RDA官方微信或LINE，了解课程详情和限时优惠</p>
+                </div>
+            `;
+        }
+        
+        // 渲染星级评分
+        function renderStars(rating) {
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+            
+            let starsHTML = '';
+            
+            for (let i = 0; i < fullStars; i++) {
+                starsHTML += '<i class="fas fa-star"></i>';
+            }
+            
+            if (halfStar) {
+                starsHTML += '<i class="fas fa-star-half-alt"></i>';
+            }
+            
+            for (let i = 0; i < emptyStars; i++) {
+                starsHTML += '<i class="far fa-star"></i>';
+            }
+            
+            return starsHTML;
+        }
+
+        // 页面加载时初始化问卷
+        window.onload = function() {
+            initQuestionnaire();
+        };
+    </script>
+</body>
+</html>

@@ -206,6 +206,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--light-gray);
             transition: var(--transition);
+            position: relative;
         }
         
         .question:hover {
@@ -306,6 +307,17 @@
         
         .btn-success:hover {
             background: #3fbde0;
+        }
+        
+        .btn-disabled {
+            background: var(--light-gray);
+            cursor: not-allowed;
+        }
+        
+        .btn-disabled:hover {
+            transform: none;
+            background: var(--light-gray);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
         }
         
         .progress-container {
@@ -575,6 +587,111 @@
             font-style: italic;
         }
         
+        .warning-box {
+            background: #fff8f8;
+            border-left: 4px solid var(--danger);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(247, 37, 133, 0.15);
+        }
+        
+        .warning-box p {
+            color: #d32f2f;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .warning-box i {
+            color: var(--danger);
+            margin-right: 10px;
+        }
+        
+        .timer {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #f72585;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(247, 37, 133, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .timer.warning {
+            background: #ff9e00;
+            animation: pulseWarning 1s infinite;
+        }
+        
+        .timer.critical {
+            background: #d32f2f;
+            animation: pulseCritical 0.7s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes pulseWarning {
+            0% { box-shadow: 0 0 0 0 rgba(255, 158, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 158, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 158, 0, 0); }
+        }
+        
+        @keyframes pulseCritical {
+            0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+        }
+        
+        .lock-section {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        
+        .lock-icon {
+            font-size: 80px;
+            color: var(--danger);
+            margin-bottom: 20px;
+            animation: shake 0.5s infinite alternate;
+        }
+        
+        @keyframes shake {
+            from { transform: translateX(-5px); }
+            to { transform: translateX(5px); }
+        }
+        
+        .lock-section h2 {
+            color: var(--danger);
+            font-size: 32px;
+            margin: 20px 0;
+        }
+        
+        .lock-section p {
+            font-size: 18px;
+            color: var(--dark);
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        .lock-section .btn {
+            background: var(--danger);
+        }
+        
+        .lock-section .btn:hover {
+            background: #d31665;
+        }
+        
         @media (max-width: 768px) {
             .section {
                 padding: 20px;
@@ -599,6 +716,14 @@
             
             .survey-image {
                 max-height: 250px;
+            }
+            
+            .timer {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
             }
         }
         
@@ -847,6 +972,11 @@
                 <p>探索你的关系模式，发现潜在认知障碍，开启自我成长之旅</p>
             </div>
             
+            <div class="warning-box">
+                <p><i class="fas fa-exclamation-triangle"></i> 
+                【注意事项】：你好，本认知钢片问卷每人有一次作答机会。为了测试结果更加准确，并且符合你的本能和认知反应，我们为每道题目设置了30秒倒计时，请在规定时间范围内准确作答，勿过度理性思考。倒计时结束后未答题则会锁卷，为了避免锁卷，请找一个安静的地方静下心来进行答题，若被锁卷后如想再次答题请通过关系动态艺术团队官方微信（rda9868）申请答题权限。</p>
+            </div>
+            
             <div class="intro">
                 <p>你是否曾在关系中反复陷入相似困境？是否换了环境，却仍被旧模式所困？</p>
                 <p>心理学研究发现：<strong>90%的关系痛苦源于早期形成的"认知钢片"</strong>——那些深藏心底的错误信念，如蚌中碎铁般持续磨损自我。</p>
@@ -865,6 +995,11 @@
                 <p class="image-caption">磨钢片为珠玉，破蚌壳见澄明</p>
             </div>
 
+            <div id="locked-warning" class="warning-box" style="display: none;">
+                <p><i class="fas fa-lock"></i> 
+                你的答题权限已被锁定。由于超时未作答，系统已自动锁卷。如需再次答题，请联系RDA官方微信（rda9868）申请二次答题权限。</p>
+            </div>
+
             <div style="text-align: center; margin-top: 30px;">
                 <button class="btn" id="start-btn" onclick="showSection('question-section')">
                     <i class="fas fa-play-circle"></i> 开始认知探索
@@ -872,6 +1007,21 @@
                 <p style="margin-top: 20px; color: var(--medium-gray); font-size: 14px;">
                     <i class="fas fa-lock"></i> 你的数据将受到严格保护，仅用于测评分析
                 </p>
+            </div>
+        </div>
+
+        <!-- 锁卷页面 -->
+        <div id="lock-section" class="section">
+            <div class="lock-section">
+                <div class="lock-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2>答题权限已锁定</h2>
+                <p>由于未在规定时间内完成作答，系统已自动锁卷，为确保测评结果的准确性，本测评每人仅有一次作答机会。</p>
+                <p>如需再次答题，请通过关系动态艺术团队官方微信（rda9868）申请二次答题权限。</p>
+                <button class="btn" onclick="lockTest()">
+                    <i class="fas fa-home"></i> 返回首页
+                </button>
             </div>
         </div>
 
@@ -895,8 +1045,8 @@
             <div id="questions-container"></div>
             
             <div class="nav">
-                <button class="btn btn-outline" id="prev-btn" onclick="handlePrevButton()" disabled>
-                    <i class="fas fa-home"></i> 返回首页
+                <button class="btn btn-outline" id="prev-btn" onclick="handlePrevButton()">
+                    <i class="fas fa-arrow-left"></i> 上一题
                 </button>
                 <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>
                     下一题 <i class="fas fa-arrow-right"></i>
@@ -977,7 +1127,7 @@
     </div>
 
     <script>
-        // 问卷数据
+        // 问卷数据（移除了加密处理）
         const questions = [
             {
                 id: 1,
@@ -1093,6 +1243,9 @@
         let userAnswers = {};
         let currentQuestion = 0;
         let hasSubmitted = false;
+        let isLocked = false;
+        let timers = {};
+        const TIME_PER_QUESTION = 30; // 每道题30秒
 
         // 钢片类型数据
         const steelTypes = {
@@ -1226,6 +1379,7 @@
                 });
                 
                 questionEl.innerHTML = `
+                    <div class="timer" id="timer-${q.id}">30</div>
                     <h3>${q.id}. ${q.text}</h3>
                     <div class="options">
                         ${optionsHTML}
@@ -1239,12 +1393,72 @@
             updateButtonStates();
         }
 
+        // 启动题目倒计时
+        function startTimer(questionId) {
+            const timerElement = document.getElementById(`timer-${questionId}`);
+            if (!timerElement) return;
+            
+            let timeLeft = TIME_PER_QUESTION;
+            timerElement.textContent = timeLeft;
+            timerElement.className = 'timer';
+            
+            if (timers[questionId]) {
+                clearInterval(timers[questionId]);
+            }
+            
+            timers[questionId] = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                
+                // 根据剩余时间更新样式
+                if (timeLeft <= 10) {
+                    timerElement.className = 'timer warning';
+                }
+                if (timeLeft <= 5) {
+                    timerElement.className = 'timer critical';
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timers[questionId]);
+                    handleTimeOut(questionId);
+                }
+            }, 1000);
+        }
+        
+        // 超时处理
+        function handleTimeOut(questionId) {
+            if (!userAnswers[questionId]) {
+                // 停止所有计时器
+                Object.values(timers).forEach(timer => clearInterval(timer));
+                // 锁定测试
+                isLocked = true;
+                showSection('lock-section');
+            }
+        }
+        
+        // 锁定测试后返回首页
+        function lockTest() {
+            isLocked = true;
+            showSection('welcome-section');
+            document.getElementById('locked-warning').style.display = 'block';
+            document.getElementById('start-btn').classList.add('btn-disabled');
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('start-btn').innerHTML = '<i class="fas fa-lock"></i> 测试已锁定';
+        }
+
         // 显示指定部分
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             document.getElementById(sectionId).classList.add('active');
+            
+            if (sectionId === 'question-section') {
+                // 显示第一题
+                currentQuestion = 0;
+                const questionId = questions[currentQuestion].id;
+                startTimer(questionId);
+            }
             
             if (sectionId === 'report-section') {
                 generateReport();
@@ -1294,7 +1508,7 @@
 
         // 选择答案
         document.addEventListener('click', function(e) {
-            if (e.target.closest('.option')) {
+            if (e.target.closest('.option') && !isLocked) {
                 const option = e.target.closest('.option');
                 const questionId = parseInt(option.closest('.question').dataset.id);
                 
@@ -1307,6 +1521,12 @@
                     value: option.dataset.value,
                     type: option.dataset.type
                 };
+                
+                // 清除当前题目的计时器
+                if (timers[questionId]) {
+                    clearInterval(timers[questionId]);
+                    document.getElementById(`timer-${questionId}`).style.display = 'none';
+                }
                 
                 updateButtonStates();
             }
@@ -1322,6 +1542,9 @@
             const prevQuestionEl = document.querySelector(`.question[data-id="${questions[currentQuestion].id}"]`);
             prevQuestionEl.style.display = 'block';
             
+            // 启动上一题的计时器
+            startTimer(questions[currentQuestion].id);
+            
             updateProgress();
             updateButtonStates();
         }
@@ -1336,6 +1559,8 @@
             if (currentQuestion < questions.length) {
                 const nextQuestionEl = document.querySelector(`.question[data-id="${questions[currentQuestion].id}"]`);
                 nextQuestionEl.style.display = 'block';
+                // 启动下一题的计时器
+                startTimer(questions[currentQuestion].id);
                 updateButtonStates();
             } else {
                 hasSubmitted = true;
@@ -1495,6 +1720,35 @@
             // 渲染训练计划
             renderTrainingPlan(mainSteelType);
         }
+
+                // 在 generateReport 函数末尾添加：
+        async function submitReport() {
+            try {
+                const reportData = {
+                    mainSteelType,
+                    strength,
+                    compositeTypes: isComposite ? mainTypes : [],
+                    answers: userAnswers,
+                    userAgent: navigator.userAgent
+                };
+
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(reportData)
+                });
+
+                const result = await response.json();
+                console.log('提交结果:', result);
+            } catch (error) {
+                console.error('提交失败:', error);
+            }
+        }
+
+        // 调用提交函数
+        submitReport();
 
         // 渲染钢片分布图
         function renderSteelChart(scores, totalSteelCount) {
@@ -1816,6 +2070,14 @@
         // 页面加载时初始化问卷
         window.onload = function() {
             initQuestionnaire();
+            
+            // 检查是否已被锁定
+            if (isLocked) {
+                document.getElementById('locked-warning').style.display = 'block';
+                document.getElementById('start-btn').classList.add('btn-disabled');
+                document.getElementById('start-btn').disabled = true;
+                document.getElementById('start-btn').innerHTML = '<i class="fas fa-lock"></i> 测试已锁定';
+            }
         };
     </script>
 </body>
